@@ -70,3 +70,39 @@ This tells git to reset to the previous commit, but to keep the changes introduc
 You can see that our commit is now gone, but the changes to `article.md` are still staged.
 
 …
+
+## git pull --rebase
+
+If you have used git with a team, then there is no doubt that you have seen this:
+
+    $ git push origin master
+    To git@github.com:bkeepers/git-history.git
+     ! [rejected]        master -> master (non-fast-forward)
+    error: failed to push some refs to 'git@github.com:bkeepers/git-history.git'
+    hint: Updates were rejected because the tip of your current branch is behind
+    hint: its remote counterpart. Merge the remote changes (e.g. 'git pull')
+    hint: before pushing again.
+    hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+
+While this message looks big and scary, it is actually quite helpful. The hints basically tell us that one of our team members have pushed changes and we need to get them, usually by running `git pull`. The hint also recommends checking out the [note about "fast-forwards"](http://www.kernel.org/pub/software/scm/git/docs/git-push.html#_note_about_fast_forwards) in the git docs. I second that recommendation.
+
+Running `git pull` will fetch the remote changes and create a new commit that merges them with our local changes. While there is nothing wrong with the merge commit, it unnecessarily muddies up our history.
+
+[show illustration here]
+
+What would be more ideal would be to take our changes and apply them on top of the remote changes.
+
+	$ git pull --rebase origin master
+	First, rewinding head to replay your work on top of it...
+	Applying: update README
+
+	$ git log --oneline
+	c408281 update README
+	d136ca4 first draft of reset
+	8dbf5d5 first draft of amend section
+	667f8c9 Add README
+
+Rebasing when pulling is almost always a good idea, so you might want to configure git to rebase by default.
+ 
+    $ git config --global branch.autosetuprebase always
+
