@@ -45,3 +45,28 @@ This should open up an editor to allow editing the commit message. Looking at th
 		667f8c9 Add README
 		 README.md | 7 +++++++
 		 1 file changed, 7 insertions(+)
+
+We've made some progress, let's commit our progress on this article:
+
+	$ git add article.md
+	$ git commit -m 'first draft of amend section'
+	[master 8dbf5d5] first draft of amend section
+	1 file changed, 47 insertions(+)
+	create mode 100644 article.md
+
+## Undo the last commit
+
+Sometimes, a commit has so many things wrong that that it is easier to just undo the whole thing and redo it. Maybe it was committed to the wrong branch, or a bunch of files got added that should not have.
+
+	$ git reset --soft HEAD^
+
+This tells git to reset to the previous commit, but to keep the changes introduced by that commit.
+
+	$ git log --oneline
+	667f8c9 Add README
+	$ git status -s
+	A  article.md
+
+You can see that our commit is now gone, but the changes to `article.md` are still staged.
+
+…
