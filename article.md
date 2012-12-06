@@ -1,4 +1,4 @@
-# A Time Travelor's Guide to Git
+# A Time Traveler's Guide to Git
 
 ## Introduction
 
