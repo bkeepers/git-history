@@ -12,7 +12,7 @@ Branches that have already been pushed to a remote should generally never be rew
 
 For whatever reason, our brains seem wired to remember something important just after we hit the "Send" button on an email. Likewise, I often realize I made a mistake immediately after making a commit in git.
 
-The safest and likely most common form of rewriting the git history is to ammend the latest commit.
+The safest and likely most common form of rewriting the git history is to amend the latest commit.
 
 This article was written in a [git repository](https://github.com/bkeepers/git-history). When I started it, I created a README explaining the purpose of the repository.
 
