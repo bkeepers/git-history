@@ -16,17 +16,17 @@ The safest and likely most common form of rewriting the git history is to amend 
 
 This article was written in a [git repository](https://github.com/bkeepers/git-history). When I started it, I created a README explaining the purpose of the repository.
 
-		$ git add README.md
-		$ git commit -am 'Add README'
-		[master (root-commit) 6261ead] Add README
-		 2 files changed, 12 insertions(+)
-		 create mode 100644 README.md
-		 create mode 100644 article.md
+	$ git add README.md
+	$ git commit -am 'Add README'
+	[master (root-commit) 6261ead] Add README
+	 2 files changed, 12 insertions(+)
+	 create mode 100644 README.md
+	 create mode 100644 article.md
 
 Oops, after I made the commit, I realized that I had committed `article.md`, which was just the first few sentences of the introduction. I did not intend to commit that file yet, so let's remove it.
 
-		$ git rm --cached article.md
-		rm 'article.md'
+	$ git rm --cached article.md
+	rm 'article.md'
 
 The `--cached` argument to `git rm` tells git to stage the removal of the file, but to not actually delete the file from the filesystem.
 
@@ -34,17 +34,17 @@ We can also make other modifications and stage them like we would if we were goi
 
 Amend the previous commit by simply passing the `--amend` flag to `git commit`:
 
-		$ git commit --amend
-		[master 667f8c9] Add README
-		 1 file changed, 7 insertions(+)
-		 create mode 100644 README.md
+	$ git commit --amend
+	[master 667f8c9] Add README
+	 1 file changed, 7 insertions(+)
+	 create mode 100644 README.md
 
 This should open up an editor to allow editing the commit message. Looking at the git log, we can see that there is still only one commit, and that commit only has `README.md`.
 
-		$ git log --oneline --stat
-		667f8c9 Add README
-		 README.md | 7 +++++++
-		 1 file changed, 7 insertions(+)
+	$ git log --oneline --stat
+	667f8c9 Add README
+	 README.md | 7 +++++++
+	 1 file changed, 7 insertions(+)
 
 We've made some progress, let's commit our progress on this article:
 
@@ -75,14 +75,14 @@ You can see that our commit is now gone, but the changes to `article.md` are sti
 
 If you have used git with a team, then there is no doubt that you have seen this:
 
-    $ git push origin master
-    To git@github.com:bkeepers/git-history.git
-     ! [rejected]        master -> master (non-fast-forward)
-    error: failed to push some refs to 'git@github.com:bkeepers/git-history.git'
-    hint: Updates were rejected because the tip of your current branch is behind
-    hint: its remote counterpart. Merge the remote changes (e.g. 'git pull')
-    hint: before pushing again.
-    hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+	$ git push origin master
+	To git@github.com:bkeepers/git-history.git
+	 ! [rejected]        master -> master (non-fast-forward)
+	error: failed to push some refs to 'git@github.com:bkeepers/git-history.git'
+	hint: Updates were rejected because the tip of your current branch is behind
+	hint: its remote counterpart. Merge the remote changes (e.g. 'git pull')
+	hint: before pushing again.
+	hint: See the 'Note about fast-forwards' in 'git push --help' for details.
 
 While this message looks big and scary, it is actually quite helpful. The hints basically tell us that one of our team members have pushed changes and we need to get them, usually by running `git pull`. The hint also recommends checking out the [note about "fast-forwards"](http://www.kernel.org/pub/software/scm/git/docs/git-push.html#_note_about_fast_forwards) in the git docs. I second that recommendation.
 
