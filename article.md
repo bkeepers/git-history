@@ -92,9 +92,11 @@ Running `git pull` will fetch the remote changes and create a new commit that me
 
 What would be more ideal would be to take our changes and apply them on top of the remote changes.
 
+``` command-line
 	$ git pull --rebase origin master
-	First, rewinding head to replay your work on top of it...
-	Applying: update README
+	> First, rewinding head to replay your work on top of it...
+	> Applying: update README
+```
 
 	$ git log --oneline
 	c408281 update README
