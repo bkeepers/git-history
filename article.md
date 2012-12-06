@@ -105,3 +105,74 @@ What would be more ideal would be to take our changes and apply them on top of t
 Rebasing when pulling is almost always a good idea, so you might want to configure git to rebase by default.
 
     $ git config --global branch.autosetuprebase always
+
+# Interactive Rebase
+
+An interactive rebase allows you to edit commits, squash multiple commits together or completely remove commits from from the recent history of your branch.  It is extremely useful for cleaning up a local branch before pushing to a remote.
+
+While I was reviewing my progress of this article up to this point, I discovered a few embarrasing typos. Since my git repo had not been shared with anyone yet, I covered my tracks by fixing the typos in the original commit. Here is how I did it. I preserved my original mistake, so you can follow along by checking out the [typos](https://github.com/bkeepers/git-history/tree/typos) branch of the repository.
+
+First, I created two new commits that fixed the typos.
+
+	$ git log --oneline
+	7445019 Fix misspelling of amend
+	b0377f9 Fix typo in title
+	b1cdd72 first draft of pull --rebase
+	2fbe35b first draft of reset
+	7bb9109 first draft of amend section
+	667f8c9 Add README
+
+Then I need to take note of the commit that needs fixed up. Both the typos were from commit `7bb9109`, first draft of amend section. So I start the rebase at the revision before:
+
+	$ git rebase -i 7bb9109^
+
+Git will now open the editor with the list of commits and a very helpful message.
+
+	pick 7bb9109 first draft of amend section
+	pick 2fbe35b first draft of reset
+	pick b1cdd72 first draft of pull --rebase
+	pick b0377f9 Fix typo in title
+	pick 7445019 Fix misspelling of amend
+
+	# Rebase 667f8c9..7445019 onto 667f8c9
+	#
+	# Commands:
+	#  p, pick = use commit
+	#  r, reword = use commit, but edit the commit message
+	#  e, edit = use commit, but stop for amending
+	#  s, squash = use commit, but meld into previous commit
+	#  f, fixup = like "squash", but discard this commit's log message
+	#  x, exec = run command (the rest of the line) using shell
+	#
+	# These lines can be re-ordered; they are executed from top to bottom.
+	#
+	# If you remove a line here THAT COMMIT WILL BE LOST.
+	#
+	# However, if you remove everything, the rebase will be aborted.
+	#
+	# Note that empty commits are commented out
+
+As the note says, you can rearrange the order of the commits, and change `pick` to one of the other commands.
+
+	pick 7bb9109 first draft of amend section
+	fixup b0377f9 Fix typo in title
+	fixup 7445019 Fix misspelling of amend
+	pick 2fbe35b first draft of reset
+	pick b1cdd72 first draft of pull --rebase
+
+I moved the two typo fixes to just after the commit where they were introduced and changed `pick` to `fixup` to meld them in to the original commit. After saving and closing the editor, git will apply the changes:
+
+	[detached HEAD 00165a8] first draft of amend section
+	 1 file changed, 47 insertions(+)
+	 create mode 100644 article.md
+	Successfully rebased and updated refs/heads/master.
+
+Now we can see by looking at the log that our history doesn't show the commits fixing the typos.
+
+	$ git log --oneline
+	4787614 first draft of pull --rebase
+	ee719e9 first draft of reset
+	00165a8 first draft of amend section
+	667f8c9 Add README
+
+This rebase worked without any other interaction, but occasionally you will have to manually fix merge conflicts. If that happens, read the messages that git gives you and don't freak out. Git will usually help you get out of a bind.
