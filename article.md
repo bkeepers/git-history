@@ -56,20 +56,18 @@ Now that We've made some progress, let's commit our progress on this article:
 
 ## Undo the last commit
 
-Sometimes, a commit has so many things wrong that that it is easier to just undo the whole thing and redo it. Maybe it was committed to the wrong branch, or a bunch of files got added that should not have.
+Sometimes, a commit has so many things wrong that that it is easier to just undo the whole thing. Maybe it was committed to the wrong branch, or a bunch of files got added that should not have.
 
-	$ git reset --soft HEAD^
+	$ git reset HEAD^
 
 This tells git to reset to the previous commit, but to keep the changes introduced by that commit.
 
 	$ git log --oneline
 	667f8c9 Add README
 	$ git status -s
-	A  article.md
+	M  article.md
 
-You can see that our commit is now gone, but the changes to `article.md` are still staged.
-
-…
+You can see that our commit is now gone, but `article.md` is still modified. From here, you can check out a different branch, stash your changes or make changes and re-commit them.
 
 ## git pull --rebase
 
