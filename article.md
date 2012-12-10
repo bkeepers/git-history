@@ -2,11 +2,11 @@
 
 ## Introduction
 
-Many people will advise against rewriting commits. While they are generally correct, understanding which operations are safe and which are dangerous can lead to a cleaner git history and make projects easier to manage.
+While scientists tell us that traveling back in time is basically impossible, [Git's](http://git-scm.com/) features and flexibility offer control over the fourth dimension for those times when the wrongs of the past need corrected. The distributed version control system allows you to easily amend or undo recent commits, reorder recent changes and scrub sensitive data from your repository.
 
-## When is it safe to rewrite history?
+Before the excitement of witnessing this rare phenomena becomes overwhelming, heed the warnings of an experienced time traveler. Git obeys the law of causality; every commit in a git repository is inextricably linked to the commit before it. Changing one commit alters all the commits that come after. Altering the past can be dangrous and–except in rare circumstances–should only be done if nobody else has observed the events that you are altering. Branches that have already been pushed to a remote should generally never be altered.
 
-Branches that have already been pushed to a remote should generally never be rewritten.
+Understanding which operations are safe and which are dangerous can lead to a cleaner git history and make projects easier to manage.
 
 ## Amend the latest commit
 
