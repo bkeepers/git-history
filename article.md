@@ -12,7 +12,7 @@ Before the excitement of witnessing this rare phenomena becomes overwhelming, he
 
 Understanding which operations are safe and which are dangerous can lead to a cleaner git history and make projects easier to manage.
 
-## Amend the latest commit
+## Amend Recent History
 
 The safest and likely most common form of rewriting the git history is to amend the latest commit. For whatever reason, the human brain seems wired to remember something important just after pressing the "Send" button on an email. Likewise, I often realize I made a mistake immediately after making a commit in git.
 
@@ -54,7 +54,7 @@ Now that We've made some progress, let's commit our progress on this article:
 	1 file changed, 47 insertions(+)
 	create mode 100644 article.md
 
-## Undo the last commit
+## Undo Recent History
 
 Sometimes, a commit has so many things wrong that that it is easier to just undo the whole thing. Maybe it was committed to the wrong branch, or a bunch of files got added that should not have.
 
@@ -69,7 +69,7 @@ This tells git to reset to the previous commit, but to keep the changes introduc
 
 The commit is now gone, but `article.md` is still modified. From here, the changes can be committed on a different branch, stashed, discarded or modified and recommitted.
 
-## git pull --rebase
+## Maintain a Tidy History
 
 If you have used git with a team, then there is no doubt that you have seen a push get rejected.
 
@@ -107,7 +107,7 @@ Unless a repository is being pushed to multiple remotes, rebasing when pulling i
 
     $ git config --global branch.autosetuprebase always
 
-# Interactive Rebase
+## Cleanup Recent History
 
 An interactive rebase allows commits to be edited, squashed together or completely removed from from the recent history of a branch.  It is extremely useful for cleaning up a local branch before pushing to a remote.
 
@@ -178,7 +178,7 @@ The log shows that the typo fixing commits are now gone. The fixes were applied 
 
 This rebase worked without any other interaction, but occasionally a rebase will require manual fixes for merge conflicts. If that happens, don't freak out and simply read the messages. Git will usually help get you out of a bind.
 
-## Rewrite all of history
+## Rewrite All of History
 
 All of the following changes will rewrite the full history of a repository, essentially making it a new repository. Pushing to the same remote that was used originally will get rejected.
 
