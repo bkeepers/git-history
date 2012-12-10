@@ -6,11 +6,11 @@ or
 
 ## Introduction
 
-While scientists tell us that traveling back in time is an impossibility, [Git's](http://git-scm.com/) features and flexibility offer control over the fourth dimension for those times when the wrongs of the past need corrected. The distributed version control system allows commits to be amended, discarded, reordered and modified to scrub data from a repository.
+While scientists have crushed the dream of traveling back in time, [Git](http://git-scm.com/) offers control over the fourth dimension for times when the wrongs of the past need corrected. The distributed version control system allows commits to be amended, discarded, reordered and modified to scrub data from a repository.
 
-Before the excitement of witnessing this rare phenomena becomes overwhelming, heed the warnings of an experienced time traveler. Git obeys the law of causality; every commit in a git repository is inextricably linked to the commit before it. Changing one commit alters all the commits that come after. Altering the past can be dangerous and–except in rare circumstances–should only be done if the events being altered have not been observed by anyone else. Branches that have already been pushed to a remote should generally never be altered.
+Before the excitement of witnessing this rare phenomena becomes overwhelming, heed the warnings of an experienced time traveler. Git obeys the law of causality; every commit in a git repository is inextricably linked to the commit before it. Changing one commit alters all the commits that come after, creating an alternate reality. Altering the past can be dangerous and–except in rare circumstances–should only be done if the events being altered have not been observed by anyone else. Branches that have already been pushed to a remote should generally never be altered.
 
-Understanding which operations are safe and which are dangerous can lead to a cleaner git history and make projects easier to manage.
+Hold on as we explore ways to rewrite history with git.
 
 ## Amend Recent History
 
@@ -25,21 +25,21 @@ This article was written in a [git repository](https://github.com/bkeepers/git-h
 	 create mode 100644 README.md
 	 create mode 100644 article.md
 
-Oops, after committing, I realized that I had committed `article.md`, which was just some notes and the first few sentences of the introduction. I did not intend to commit that file yet, so let's remove it.
+Oops, after committing, I realized that I had committed `article.md`, which was just some notes and the first few sentences of the introduction. I did not intend to commit that file yet, so let's remove it from the history.
 
 	$ git rm --cached article.md
 	rm 'article.md'
 
 The `--cached` argument to `git rm` tells git to stage the removal of the file, but to not actually delete the file from the filesystem.
 
-We can also make other modifications like we would if we were going to create another commit–such as making edits to the README.md and staging them with `git add`. Amend the previous commit by simply passing the `--amend` flag to `git commit`:
+We can also make other modifications like we would if we were going to create another commit–such as making edits to the README.md and staging them with `git add`. Amend the previous commit by passing the `--amend` flag to `git commit`:
 
 	$ git commit --amend
 	[master 667f8c9] Add README
 	 1 file changed, 7 insertions(+)
 	 create mode 100644 README.md
 
-Git will open an editor to allow editing the previous commit message. The git log shows that there is still only one commit, and that commit only has `README.md`.
+Git will open an editor to allow editing the previous commit message. The git log now shows that there is still only one commit, and that commit only has `README.md`.
 
 	$ git log --oneline --stat
 	667f8c9 Add README
@@ -160,7 +160,7 @@ Git will open the editor with the list of commits and a very helpful message.
 	#
 	# Note that empty commits are commented out
 
-As the note says, commits can be rearrange to change their order, or `pick` can be changed to one of the other commands.
+As the note explains, commits can be rearrange to change their order, or `pick` can be changed to one of the other commands.
 
 	pick 7bb9109 first draft of amend section
 	fixup b0377f9 Fix typo in title
@@ -191,7 +191,7 @@ All the git commands we have examined so far are useful for modifying recent com
 
 [`git filter-branch`](http://git-scm.com/docs/git-filter-branch) supports a hand full of custom filters that can rewrite the revision history for a range of commits.
 
-My first legitimate use of `git filter-branch` was on large project where the server and the client were both in the same repository. As more people were added to the team and tensions between the hipsters and neck-beards rose, it became obvious that two repositories would be more appropriate. A simple solution would have been to clone the repository twice, delete the unneeded files, and move the remaining files around. But that leaves two repositories with duplicate histories that take up unnecessary space. Instead, we cloned the repository twice, and used the `--subdirectory-filter` to create two new repositories that only contained the changes for the relevant part of the application.
+My first legitimate use of `git filter-branch` was on large project where the server and the client were both in the same repository. As more people were added to the team and tensions between the hipsters and neck-beards rose, it became obvious that two repositories would be more appropriate. A simple solution would have been to clone the repository twice, delete the unneeded files, and move the remaining files around. But that leaves two repositories with duplicate histories that take up unnecessary space. Instead, we cloned the repository twice, and used the `--subdirectory-filter` to create two new repositories that only contained the changes for the relevant parts of the application.
 
 	$ git filter-branch --subdirectory-filter client -- --all
 
