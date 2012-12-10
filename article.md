@@ -218,3 +218,6 @@ It is possible to force git to pushing all changes to an existing remote, but no
 
     $ git push --force --all --tags
 
+## Conclusion
+
+Git's powerful features, extreme flexibility and often unintuitive command line may seem overwhelming, but taking time to learn and experiment is a worth-while invistment. Understanding how to rewrite the revision history will give you complete control over your projects and make them easier to manage.
