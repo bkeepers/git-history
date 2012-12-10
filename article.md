@@ -2,17 +2,15 @@
 
 ## Introduction
 
-While scientists tell us that traveling back in time is basically impossible, [Git's](http://git-scm.com/) features and flexibility offer control over the fourth dimension for those times when the wrongs of the past need corrected. The distributed version control system allows you to easily amend or undo recent commits, reorder recent changes and scrub sensitive data from your repository.
+While scientists tell us that traveling back in time is an impossibility, [Git's](http://git-scm.com/) features and flexibility offer control over the fourth dimension for those times when the wrongs of the past need corrected. The distributed version control system allows you to easily amend or undo recent commits, reorder changes and scrub data from your repository.
 
-Before the excitement of witnessing this rare phenomena becomes overwhelming, heed the warnings of an experienced time traveler. Git obeys the law of causality; every commit in a git repository is inextricably linked to the commit before it. Changing one commit alters all the commits that come after. Altering the past can be dangrous and–except in rare circumstances–should only be done if nobody else has observed the events that you are altering. Branches that have already been pushed to a remote should generally never be altered.
+Before the excitement of witnessing this rare phenomena becomes overwhelming, heed the warnings of an experienced time traveler. Git obeys the law of causality; every commit in a git repository is inextricably linked to the commit before it. Changing one commit alters all the commits that come after. Altering the past can be dangerous and–except in rare circumstances–should only be done if nobody else has observed the events that you are altering. Branches that have already been pushed to a remote should generally never be altered.
 
 Understanding which operations are safe and which are dangerous can lead to a cleaner git history and make projects easier to manage.
 
 ## Amend the latest commit
 
-For whatever reason, our brains seem wired to remember something important just after we hit the "Send" button on an email. Likewise, I often realize I made a mistake immediately after making a commit in git.
-
-The safest and likely most common form of rewriting the git history is to amend the latest commit.
+The safest and likely most common form of rewriting the git history is to amend the latest commit. For whatever reason, our brains seem wired to remember something important just after pressing the "Send" button on an email. Likewise, I often realize I made a mistake immediately after making a commit in git.
 
 This article was written in a [git repository](https://github.com/bkeepers/git-history). When I started it, I created a README explaining the purpose of the repository.
 
@@ -30,23 +28,21 @@ Oops, after I made the commit, I realized that I had committed `article.md`, whi
 
 The `--cached` argument to `git rm` tells git to stage the removal of the file, but to not actually delete the file from the filesystem.
 
-We can also make other modifications and stage them like we would if we were going to create another commit.
-
-Amend the previous commit by simply passing the `--amend` flag to `git commit`:
+We can also make other modifications and stage them like we would if we were going to create another commit. Amend the previous commit by simply passing the `--amend` flag to `git commit`:
 
 	$ git commit --amend
 	[master 667f8c9] Add README
 	 1 file changed, 7 insertions(+)
 	 create mode 100644 README.md
 
-This should open up an editor to allow editing the commit message. Looking at the git log, we can see that there is still only one commit, and that commit only has `README.md`.
+Git will open an editor to allow editing the commit message. The git log shows that there is still only one commit, and that commit only has `README.md`.
 
 	$ git log --oneline --stat
 	667f8c9 Add README
 	 README.md | 7 +++++++
 	 1 file changed, 7 insertions(+)
 
-We've made some progress, let's commit our progress on this article:
+Now that We've made some progress, let's commit our progress on this article:
 
 	$ git add article.md
 	$ git commit -m 'first draft of amend section'
@@ -110,7 +106,7 @@ Rebasing when pulling is almost always a good idea, so you might want to configu
 
 An interactive rebase allows you to edit commits, squash multiple commits together or completely remove commits from from the recent history of your branch.  It is extremely useful for cleaning up a local branch before pushing to a remote.
 
-While I was reviewing my progress of this article up to this point, I discovered a few embarrasing typos. Since my git repo had not been shared with anyone yet, I covered my tracks by fixing the typos in the original commit. Here is how I did it. I preserved my original mistake, so you can follow along by checking out the [typos](https://github.com/bkeepers/git-history/tree/typos) branch of the repository.
+While I was reviewing my progress of this article up to this point, I discovered a few embarrassing typos. Since my git repo had not been shared with anyone yet, I covered my tracks by fixing the typos in the original commit. Here is how I did it. I preserved my original mistake, so you can follow along by checking out the [typos](https://github.com/bkeepers/git-history/tree/typos) branch of the repository.
 
 First, I created two new commits that fixed the typos.
 
@@ -194,7 +190,7 @@ My first legitimate use of `git filter-branch` was on large project where the se
 
 	$ git filter-branch --subdirectory-filter client -- --all
 
-If you use differnet emails for personal and work projects, you may have accidentally made commits to a repository using the wrong email address. The `--env-filter` can modify basic metadata about a commit, such as author information or the commit date. 
+If you use different emails for personal and work projects, you may have accidentally made commits to a repository using the wrong email address. The `--env-filter` can modify basic metadata about a commit, such as author information or the commit date. 
 
 	$ git filter-branch --env-filter '
 	  if [ $GIT_AUTHOR_EMAIL = personal@example.com ];
