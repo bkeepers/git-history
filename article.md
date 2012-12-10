@@ -14,7 +14,7 @@ Understanding which operations are safe and which are dangerous can lead to a cl
 
 ## Amend Recent History
 
-The safest and likely most common form of rewriting the git history is to amend the latest commit. For whatever reason, the human brain seems wired to remember something important just after pressing the "Send" button on an email. Likewise, I often realize I made a mistake immediately after making a commit in git.
+The safest and likely most common form of rewriting the git history is to amend the latest commit. For whatever reason, the human brain seems wired to remember something important just after pressing the "Send" button on an email, and the right words always come to mind after a conversation is over. Likewise, I often realize I made a mistake immediately after making a commit in git.
 
 This article was written in a [git repository](https://github.com/bkeepers/git-history). The first commit was to create a README explaining the purpose of the repository.
 
@@ -46,7 +46,7 @@ Git will open an editor to allow editing the previous commit message. The git lo
 	 README.md | 7 +++++++
 	 1 file changed, 7 insertions(+)
 
-Now that We've made some progress, let's commit our progress on this article:
+Let's commit this article now that progress has been made.
 
 	$ git add article.md
 	$ git commit -m 'first draft of amend section'
@@ -56,18 +56,19 @@ Now that We've made some progress, let's commit our progress on this article:
 
 ## Undo Recent History
 
-Sometimes, a commit has so many things wrong that that it is easier to just undo the whole thing. Maybe it was committed to the wrong branch, or a bunch of files got added that should not have.
+Sometimes, a commit has so many things wrong that that it is easier to just undo it. Maybe it was committed to the wrong branch, or a directory of unwanted files got accidentally added.
 
 	$ git reset HEAD^
 
-This tells git to reset to the previous commit, but to keep the changes introduced by that commit.
+This tells git to reset to the previous commit, but to keep the changes introduced by that commit. Looking at the log and status, we can see that our latest commit is gone, but `article.md` is still modified.
 
 	$ git log --oneline
 	667f8c9 Add README
+	
 	$ git status -s
 	M  article.md
 
-The commit is now gone, but `article.md` is still modified. From here, the changes can be committed on a different branch, stashed, discarded or modified and recommitted.
+From here, the changes can be committed on a different branch, stashed, discarded or modified and recommitted.
 
 ## Maintain a Tidy History
 
@@ -107,11 +108,17 @@ Unless a repository is being pushed to multiple remotes, rebasing when pulling i
 
     $ git config --global branch.autosetuprebase always
 
+Keeping the revision history tidy may seem superficial, but it helps immensely when managing a large project.
+
 ## Cleanup Recent History
 
-An interactive rebase allows commits to be edited, squashed together or completely removed from from the recent history of a branch.  It is extremely useful for cleaning up a local branch before pushing to a remote.
+Sometimes it is not clear until a few steps later that you are on the wrong path. Git's flexibility makes it easy to create checkpoints along the way, offering a point to return to if things go wrong.
 
-While reviewing progress of this article, I discovered a few embarrassing typos. Since the git repo had not been shared with anyone yet, I covered my tracks by fixing the typos in the original commit. I preserved my original mistake, so you can follow along by checking out the [typos](https://github.com/bkeepers/git-history/tree/typos) branch of the repository.
+In my daily development, I commit as often as possible. Anytime I think to myself "ok, that is done, now what?", I commit. While this leads to a revision history that accurately reflects the order of events, it is not the most conducive to effectively managing a large project. So once I am ready to share my changes with my team, I review my unpunished commits and clean them up.
+
+An interactive rebase allows commits to be edited, squashed together or completely removed from from the recent history of a branch.
+
+While reviewing progress of this article, I discovered a few embarrassing typos. Since the repository had not been shared with anyone yet, I covered my tracks by fixing the typos in the original commit. I preserved my original mistake, so you can follow along by checking out the [typos](https://github.com/bkeepers/git-history/tree/typos) branch of the repository.
 
 First, I created two new commits to fix the typos.
 
@@ -123,11 +130,11 @@ First, I created two new commits to fix the typos.
 	7bb9109 first draft of amend section
 	667f8c9 Add README
 
-Then I need to take note of the commit that needs fixed up. Both the typos were from commit `7bb9109`, first draft of amend section. So I start the rebase at the revision before:
+Take note of the commit that needs fixed up. Both the typos were from commit `7bb9109`, first draft of amend section. Start the rebase at the revision before:
 
 	$ git rebase -i 7bb9109^
 
-Git will now open the editor with the list of commits and a very helpful message.
+Git will open the editor with the list of commits and a very helpful message.
 
 	pick 7bb9109 first draft of amend section
 	pick 2fbe35b first draft of reset
@@ -180,14 +187,7 @@ This rebase worked without any other interaction, but occasionally a rebase will
 
 ## Rewrite All of History
 
-All of the following changes will rewrite the full history of a repository, essentially making it a new repository. Pushing to the same remote that was used originally will get rejected.
-
-    $ git push
-	 ! [rejected]        master -> master (non-fast-forward)
-
-To use the same remote, git can be forced into pushing all changes, but note that this could have adverse effects for everyone else working on the project.
-
-    $ git push --force --all --tags
+All the git commands we have examined so far are useful for modifying recent commits, but sometimes more extreme measures are necessary, whether it is to remove sensitive or extremely large files or to simply make a project easier to manager.
 
 [`git filter-branch`](http://git-scm.com/docs/git-filter-branch) supports a hand full of custom filters that can rewrite the revision history for a range of commits.
 
@@ -208,3 +208,13 @@ Maybe early on in a project someone committed some extremely large assets, and n
 
 	$ git filter-branch --index-filter 'git rm -r --cached --ignore-unmatch docs/designs' \
 	  --prune-empty --tag-name-filter cat -- --all
+
+All of the following changes will rewrite the full history of a repository, essentially making it a new repository. Pushing to the same remote that was used originally will get rejected.
+
+    $ git push
+	 ! [rejected]        master -> master (non-fast-forward)
+
+It is possible to force git to pushing all changes to an existing remote, but note that this could have adverse effects for everyone else working on the project.
+
+    $ git push --force --all --tags
+
