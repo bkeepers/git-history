@@ -176,3 +176,34 @@ Now we can see by looking at the log that our history doesn't show the commits f
 	667f8c9 Add README
 
 This rebase worked without any other interaction, but occasionally you will have to manually fix merge conflicts. If that happens, read the messages that git gives you and don't freak out. Git will usually help you get out of a bind.
+
+## Rewrite all of history
+
+All of the following changes will rewrite the full history of a repository, essentially making it a new repository. If you try to push it to the same remote that was used originally, it will get rejected.
+
+    $ git push
+	 ! [rejected]        master -> master (non-fast-forward)
+
+If you would like to use the same remote, you can force git to push all of your changes, but note that this could have adverse effects for everyone else working on the project.
+
+    $ git push --force --all --tags
+
+[`git filter-branch`](http://git-scm.com/docs/git-filter-branch) supports a hand full of custom filters that can rewrite the revision history for a range of commits.
+
+My first legitimate use of `git filter-branch` was on large project where the server and the client were both in the same repository. As we added more people to the team and tensions between the hipsters and neck-beards rose, it became obvious that two repositories would be more appropriate. We could have simply cloned the repository twice, delete the unneeded files, and moved files around. But that leaves us with two repositories with duplicate histories that take up unnecessary space. Instead, we cloned the repository twice, and used the `--subdirectory-filter` to create two new repositories that only contained the changes for the relevant part of the application.
+
+	$ git filter-branch --subdirectory-filter client -- --all
+
+If you use differnet emails for personal and work projects, you may have accidentally made commits to a repository using the wrong email address. The `--env-filter` can modify basic metadata about a commit, such as author information or the commit date. 
+
+	$ git filter-branch --env-filter '
+	  if [ $GIT_AUTHOR_EMAIL = personal@example.com ];
+	  then GIT_AUTHOR_EMAIL=work@example.com;
+	  fi; export GIT_AUTHOR_EMAIL'
+	Rewrite f853027b7979756bab7146d3bb34d8829b81a884 (8/8)
+	Ref 'refs/heads/master' was rewritten
+
+Maybe early on in a project someone committed some extremely large assets, and now everyone that clones the repository has to wait for those assets to download. Or maybe sensitive data found its way into your repository, either on purpose or often by accident.
+
+	$ git filter-branch --index-filter 'git rm -r --cached --ignore-unmatch docs/designs' \
+	  --prune-empty --tag-name-filter cat -- --all
