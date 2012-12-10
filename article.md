@@ -1,5 +1,9 @@
 # A Time Traveler's Guide to Git
 
+or
+
+# 5 Ways to Rewrite History with Git
+
 ## Introduction
 
 While scientists tell us that traveling back in time is an impossibility, [Git's](http://git-scm.com/) features and flexibility offer control over the fourth dimension for those times when the wrongs of the past need corrected. The distributed version control system allows you to easily amend or undo recent commits, reorder changes and scrub data from your repository.
