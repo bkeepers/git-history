@@ -6,17 +6,17 @@ or
 
 ## Introduction
 
-While scientists tell us that traveling back in time is an impossibility, [Git's](http://git-scm.com/) features and flexibility offer control over the fourth dimension for those times when the wrongs of the past need corrected. The distributed version control system allows you to easily amend or undo recent commits, reorder changes and scrub data from your repository.
+While scientists tell us that traveling back in time is an impossibility, [Git's](http://git-scm.com/) features and flexibility offer control over the fourth dimension for those times when the wrongs of the past need corrected. The distributed version control system allows commits to be amended, discarded, reordered and modified to scrub data from a repository.
 
-Before the excitement of witnessing this rare phenomena becomes overwhelming, heed the warnings of an experienced time traveler. Git obeys the law of causality; every commit in a git repository is inextricably linked to the commit before it. Changing one commit alters all the commits that come after. Altering the past can be dangerous and–except in rare circumstances–should only be done if nobody else has observed the events that you are altering. Branches that have already been pushed to a remote should generally never be altered.
+Before the excitement of witnessing this rare phenomena becomes overwhelming, heed the warnings of an experienced time traveler. Git obeys the law of causality; every commit in a git repository is inextricably linked to the commit before it. Changing one commit alters all the commits that come after. Altering the past can be dangerous and–except in rare circumstances–should only be done if the events being altered have not been observed by anyone else. Branches that have already been pushed to a remote should generally never be altered.
 
 Understanding which operations are safe and which are dangerous can lead to a cleaner git history and make projects easier to manage.
 
 ## Amend the latest commit
 
-The safest and likely most common form of rewriting the git history is to amend the latest commit. For whatever reason, our brains seem wired to remember something important just after pressing the "Send" button on an email. Likewise, I often realize I made a mistake immediately after making a commit in git.
+The safest and likely most common form of rewriting the git history is to amend the latest commit. For whatever reason, the human brain seems wired to remember something important just after pressing the "Send" button on an email. Likewise, I often realize I made a mistake immediately after making a commit in git.
 
-This article was written in a [git repository](https://github.com/bkeepers/git-history). When I started it, I created a README explaining the purpose of the repository.
+This article was written in a [git repository](https://github.com/bkeepers/git-history). The first commit was to create a README explaining the purpose of the repository.
 
 	$ git add README.md
 	$ git commit -am 'Add README'
@@ -25,7 +25,7 @@ This article was written in a [git repository](https://github.com/bkeepers/git-h
 	 create mode 100644 README.md
 	 create mode 100644 article.md
 
-Oops, after I made the commit, I realized that I had committed `article.md`, which was just the first few sentences of the introduction. I did not intend to commit that file yet, so let's remove it.
+Oops, after committing, I realized that I had committed `article.md`, which was just some notes and the first few sentences of the introduction. I did not intend to commit that file yet, so let's remove it.
 
 	$ git rm --cached article.md
 	rm 'article.md'
@@ -67,11 +67,11 @@ This tells git to reset to the previous commit, but to keep the changes introduc
 	$ git status -s
 	M  article.md
 
-You can see that our commit is now gone, but `article.md` is still modified. From here, you can check out a different branch, stash your changes or make changes and re-commit them.
+The commit is now gone, but `article.md` is still modified. From here, the changes can be committed on a different branch, stashed, discarded or modified and recommitted.
 
 ## git pull --rebase
 
-If you have used git with a team, then there is no doubt that you have seen this:
+If you have used git with a team, then there is no doubt that you have seen a push get rejected.
 
 	$ git push origin master
 	To git@github.com:bkeepers/git-history.git
@@ -82,9 +82,9 @@ If you have used git with a team, then there is no doubt that you have seen this
 	hint: before pushing again.
 	hint: See the 'Note about fast-forwards' in 'git push --help' for details.
 
-While this message looks big and scary, it is actually quite helpful. The hints basically tell us that one of our team members have pushed changes and we need to get them, usually by running `git pull`. The hint also recommends checking out the [note about "fast-forwards"](http://www.kernel.org/pub/software/scm/git/docs/git-push.html#_note_about_fast_forwards) in the git docs. I second that recommendation.
+While this message looks big and scary, it is actually quite helpful. The hints tell us that since we started our work, one of our team members pushed changes and we need to get them, usually by running `git pull`. The hint also recommends checking out the [note about "fast-forwards"](http://www.kernel.org/pub/software/scm/git/docs/git-push.html#_note_about_fast_forwards) in the git docs. I second that recommendation.
 
-Running `git pull` will fetch the remote changes and create a new commit that merges them with our local changes. While there is nothing wrong with the merge commit, it unnecessarily muddies up our history.
+Running `git pull` will fetch the remote changes and create a new commit that merges them with our local changes. While there is nothing wrong with the merge commit, it adds unnecessary complexity to the revision history.
 
 [show illustration here]
 
@@ -94,23 +94,26 @@ What would be more ideal would be to take our changes and apply them on top of t
 	First, rewinding head to replay your work on top of it...
 	Applying: update README
 
+This makes the revision history appear as if the change was made after a teammate made their commit.
+
+[replace with illustration]
 	$ git log --oneline
 	c408281 update README
 	d136ca4 first draft of reset
 	8dbf5d5 first draft of amend section
 	667f8c9 Add README
 
-Rebasing when pulling is almost always a good idea, so you might want to configure git to rebase by default.
+Unless a repository is being pushed to multiple remotes, rebasing when pulling is almost always a good idea. I have git configured to configured to rebase automatically.
 
     $ git config --global branch.autosetuprebase always
 
 # Interactive Rebase
 
-An interactive rebase allows you to edit commits, squash multiple commits together or completely remove commits from from the recent history of your branch.  It is extremely useful for cleaning up a local branch before pushing to a remote.
+An interactive rebase allows commits to be edited, squashed together or completely removed from from the recent history of a branch.  It is extremely useful for cleaning up a local branch before pushing to a remote.
 
-While I was reviewing my progress of this article up to this point, I discovered a few embarrassing typos. Since my git repo had not been shared with anyone yet, I covered my tracks by fixing the typos in the original commit. Here is how I did it. I preserved my original mistake, so you can follow along by checking out the [typos](https://github.com/bkeepers/git-history/tree/typos) branch of the repository.
+While reviewing progress of this article, I discovered a few embarrassing typos. Since the git repo had not been shared with anyone yet, I covered my tracks by fixing the typos in the original commit. I preserved my original mistake, so you can follow along by checking out the [typos](https://github.com/bkeepers/git-history/tree/typos) branch of the repository.
 
-First, I created two new commits that fixed the typos.
+First, I created two new commits to fix the typos.
 
 	$ git log --oneline
 	7445019 Fix misspelling of amend
@@ -150,7 +153,7 @@ Git will now open the editor with the list of commits and a very helpful message
 	#
 	# Note that empty commits are commented out
 
-As the note says, you can rearrange the order of the commits, and change `pick` to one of the other commands.
+As the note says, commits can be rearrange to change their order, or `pick` can be changed to one of the other commands.
 
 	pick 7bb9109 first draft of amend section
 	fixup b0377f9 Fix typo in title
@@ -165,7 +168,7 @@ I moved the two typo fixes to just after the commit where they were introduced a
 	 create mode 100644 article.md
 	Successfully rebased and updated refs/heads/master.
 
-Now we can see by looking at the log that our history doesn't show the commits fixing the typos.
+The log shows that the typo fixing commits are now gone. The fixes were applied to the original commits and there is no evidence of my poor spelling (in this branch).
 
 	$ git log --oneline
 	4787614 first draft of pull --rebase
@@ -173,26 +176,26 @@ Now we can see by looking at the log that our history doesn't show the commits f
 	00165a8 first draft of amend section
 	667f8c9 Add README
 
-This rebase worked without any other interaction, but occasionally you will have to manually fix merge conflicts. If that happens, read the messages that git gives you and don't freak out. Git will usually help you get out of a bind.
+This rebase worked without any other interaction, but occasionally a rebase will require manual fixes for merge conflicts. If that happens, don't freak out and simply read the messages. Git will usually help get you out of a bind.
 
 ## Rewrite all of history
 
-All of the following changes will rewrite the full history of a repository, essentially making it a new repository. If you try to push it to the same remote that was used originally, it will get rejected.
+All of the following changes will rewrite the full history of a repository, essentially making it a new repository. Pushing to the same remote that was used originally will get rejected.
 
     $ git push
 	 ! [rejected]        master -> master (non-fast-forward)
 
-If you would like to use the same remote, you can force git to push all of your changes, but note that this could have adverse effects for everyone else working on the project.
+To use the same remote, git can be forced into pushing all changes, but note that this could have adverse effects for everyone else working on the project.
 
     $ git push --force --all --tags
 
 [`git filter-branch`](http://git-scm.com/docs/git-filter-branch) supports a hand full of custom filters that can rewrite the revision history for a range of commits.
 
-My first legitimate use of `git filter-branch` was on large project where the server and the client were both in the same repository. As we added more people to the team and tensions between the hipsters and neck-beards rose, it became obvious that two repositories would be more appropriate. We could have simply cloned the repository twice, delete the unneeded files, and moved files around. But that leaves us with two repositories with duplicate histories that take up unnecessary space. Instead, we cloned the repository twice, and used the `--subdirectory-filter` to create two new repositories that only contained the changes for the relevant part of the application.
+My first legitimate use of `git filter-branch` was on large project where the server and the client were both in the same repository. As more people were added to the team and tensions between the hipsters and neck-beards rose, it became obvious that two repositories would be more appropriate. A simple solution would have been to clone the repository twice, delete the unneeded files, and move the remaining files around. But that leaves two repositories with duplicate histories that take up unnecessary space. Instead, we cloned the repository twice, and used the `--subdirectory-filter` to create two new repositories that only contained the changes for the relevant part of the application.
 
 	$ git filter-branch --subdirectory-filter client -- --all
 
-If you use different emails for personal and work projects, you may have accidentally made commits to a repository using the wrong email address. The `--env-filter` can modify basic metadata about a commit, such as author information or the commit date. 
+Many people use different emails emails for personal and work projects, which can easily result in commits to a repository using the wrong email address. The `--env-filter` can modify basic metadata about a commit, such as author information or the commit date. 
 
 	$ git filter-branch --env-filter '
 	  if [ $GIT_AUTHOR_EMAIL = personal@example.com ];
@@ -201,7 +204,7 @@ If you use different emails for personal and work projects, you may have acciden
 	Rewrite f853027b7979756bab7146d3bb34d8829b81a884 (8/8)
 	Ref 'refs/heads/master' was rewritten
 
-Maybe early on in a project someone committed some extremely large assets, and now everyone that clones the repository has to wait for those assets to download. Or maybe sensitive data found its way into your repository, either on purpose or often by accident.
+Maybe early on in a project someone committed some extremely large assets, and now everyone that clones the repository has to wait for those assets to download. Or maybe sensitive data found its way into a repository, either on purpose or often by accident.
 
 	$ git filter-branch --index-filter 'git rm -r --cached --ignore-unmatch docs/designs' \
 	  --prune-empty --tag-name-filter cat -- --all
