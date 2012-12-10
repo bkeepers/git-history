@@ -32,14 +32,14 @@ Oops, after I made the commit, I realized that I had committed `article.md`, whi
 
 The `--cached` argument to `git rm` tells git to stage the removal of the file, but to not actually delete the file from the filesystem.
 
-We can also make other modifications and stage them like we would if we were going to create another commit. Amend the previous commit by simply passing the `--amend` flag to `git commit`:
+We can also make other modifications like we would if we were going to create another commit–such as making edits to the README.md and staging them with `git add`. Amend the previous commit by simply passing the `--amend` flag to `git commit`:
 
 	$ git commit --amend
 	[master 667f8c9] Add README
 	 1 file changed, 7 insertions(+)
 	 create mode 100644 README.md
 
-Git will open an editor to allow editing the commit message. The git log shows that there is still only one commit, and that commit only has `README.md`.
+Git will open an editor to allow editing the previous commit message. The git log shows that there is still only one commit, and that commit only has `README.md`.
 
 	$ git log --oneline --stat
 	667f8c9 Add README
