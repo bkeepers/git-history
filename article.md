@@ -220,4 +220,11 @@ It is possible to force git to pushing all changes to an existing remote, but no
 
 ## Conclusion
 
-Git's powerful features, extreme flexibility and often unintuitive command line may seem overwhelming, but taking time to learn and experiment is a worth-while invistment. Understanding how to rewrite the revision history will give you complete control over your projects and make them easier to manage.
+Git's powerful features, extreme flexibility and often unintuitive command line may seem overwhelming, but taking time to learn and experiment is a worth-while investment. Understanding how to rewrite the revision history will give you complete control over your projects and make them easier to manage.
+
+## Author Information
+
+Name: Brandon Keepers
+URL: http://twitter.com/bkeepers
+Photo: http://cl.ly/image/3z1w2s383s1C 
+Brandon Keepers is a maker and breaker of things at GitHub working mostly on [Speaker Deck](http://speakerdeck.com). When his face is not dimly lit by a computer screen, you can find him with a book in his hands, playing racquetball or basketball, running with his dog, or enjoying good food and beer with his wife.
