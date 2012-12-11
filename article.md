@@ -6,9 +6,9 @@ or
 
 ## Introduction
 
-While scientists have crushed the dream of traveling back in time, [Git](http://git-scm.com/) offers control over the fourth dimension for times when the wrongs of the past need corrected. The distributed version control system allows commits to be amended, discarded, reordered and modified to scrub data from a repository.
+While scientists have crushed the dream of traveling back in time, [Git](http://git-scm.com/) offers control over the fourth dimension when the wrongs of the past need to be corrected. The distributed version control system allows commits to be amended, discarded, reordered and modified to scrub data from a repository.
 
-Before the excitement of witnessing this rare phenomena becomes overwhelming, heed the warnings of an experienced time traveler. Git obeys the law of causality; every commit in a git repository is inextricably linked to the commit before it. Changing one commit alters all the commits that come after, creating an alternate reality. Altering the past can be dangerous and–except in rare circumstances–should only be done if the events being altered have not been observed by anyone else. Branches that have already been pushed to a remote should not be altered.
+Before the excitement of witnessing this rare phenomena becomes overwhelming, heed the warnings of an experienced time traveler. Git obeys the law of causality—every commit in a git repository is inextricably linked to the commit before it. Changing one commit alters all the commits that come after, creating an alternate reality. Altering the past can be dangerous and–except in rare circumstances–should only be done if the events being altered have not been observed by anyone else. Branches that have already been pushed to a remote should not be altered.
 
 Join me as we explore ways to rewrite history with git.
 
@@ -91,7 +91,7 @@ Running `git pull` will fetch the remote changes and create a new commit that me
 
 [show illustration here]
 
-What would be more ideal would be to take our changes and apply them on top of the remote changes.
+What would make our history clearer and more readable would be a way take our changes and apply them on top of the remote changes, like so:
 
 	$ git pull --rebase origin master
 	First, rewinding head to replay your work on top of it...
@@ -116,7 +116,7 @@ Keeping the revision history tidy may seem superficial, but it helps immensely w
 
 Sometimes it is not clear until a few steps later that you are on the wrong path. Git's flexibility makes it easy to create checkpoints along the way, offering a point to return to if things go wrong.
 
-In my daily development, I commit as often as possible. Anytime I think to myself "ok, that is done, now what?", I commit. While this leads to a revision history that accurately reflects the order of events, it is not the most conducive to effectively managing a large project. So once I am ready to share my changes with my team, I review my unpublished commits and clean them up.
+In my daily development, I commit as often as possible. Anytime I think to myself "ok, that is done, now what?", I commit. While this leads to a revision history that accurately reflects the order of events, the noise of many tiny commits can actually inhibit the maintainability of large projects. So once I am ready to share my changes with my team, I review my unpublished commits and clean them up.
 
 An interactive rebase allows commits to be edited, squashed together or completely removed from the recent history of a branch.
 
@@ -189,7 +189,7 @@ This rebase worked without any other interaction, but occasionally a rebase will
 
 ## Rewrite All of History
 
-All the git commands we have examined so far are useful for modifying recent commits, but sometimes more extreme measures are necessary, whether it is to remove sensitive or extremely large files or to simply make a project easier to manager.
+All the git commands we have examined so far are useful for modifying recent commits, but sometimes more extreme measures are necessary, whether it is to remove sensitive or extremely large files or to simply make a project easier to manage.
 
 [`git filter-branch`](http://git-scm.com/docs/git-filter-branch) supports a hand full of custom filters that can rewrite the revision history for a range of commits.
 
@@ -197,7 +197,7 @@ My first legitimate use of `git filter-branch` was on large project where the se
 
 	$ git filter-branch --subdirectory-filter client -- --all
 
-Many people use different emails for personal and work projects, which can easily result in commits to a repository using the wrong email address. The `--env-filter` can modify basic metadata about a commit, such as author information or the commit date. 
+Many people use different email addresses for personal and work projects, which can easily result in commits to a repository using the wrong email address. The `--env-filter` can modify basic metadata about a commit, such as author information or the commit date. 
 
 	$ git filter-branch --env-filter '
 	  if [ $GIT_AUTHOR_EMAIL = personal@example.com ];
@@ -206,7 +206,7 @@ Many people use different emails for personal and work projects, which can easil
 	Rewrite f853027b7979756bab7146d3bb34d8829b81a884 (8/8)
 	Ref 'refs/heads/master' was rewritten
 
-Maybe early on in a project someone committed some extremely large assets, and now everyone that clones the repository has to wait for those assets to download. Or maybe you are open-sourcing a project that has some sensitive data stored in it.
+Suppose that early on in a project, someone committed some extremely large assets, and now everyone that clones the repository has to wait for those assets to download. Or maybe you are open-sourcing a project that has some sensitive data stored in it.
 
 	$ git filter-branch --index-filter 'git rm -r --cached --ignore-unmatch docs/designs' \
 	  --prune-empty --tag-name-filter cat -- --all
