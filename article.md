@@ -8,9 +8,9 @@ or
 
 While scientists have crushed the dream of traveling back in time, [Git](http://git-scm.com/) offers control over the fourth dimension for times when the wrongs of the past need corrected. The distributed version control system allows commits to be amended, discarded, reordered and modified to scrub data from a repository.
 
-Before the excitement of witnessing this rare phenomena becomes overwhelming, heed the warnings of an experienced time traveler. Git obeys the law of causality; every commit in a git repository is inextricably linked to the commit before it. Changing one commit alters all the commits that come after, creating an alternate reality. Altering the past can be dangerous and–except in rare circumstances–should only be done if the events being altered have not been observed by anyone else. Branches that have already been pushed to a remote should generally never be altered.
+Before the excitement of witnessing this rare phenomena becomes overwhelming, heed the warnings of an experienced time traveler. Git obeys the law of causality; every commit in a git repository is inextricably linked to the commit before it. Changing one commit alters all the commits that come after, creating an alternate reality. Altering the past can be dangerous and–except in rare circumstances–should only be done if the events being altered have not been observed by anyone else. Branches that have already been pushed to a remote should not be altered.
 
-Hold on as we explore ways to rewrite history with git.
+Join me as we explore ways to rewrite history with git.
 
 ## Amend Recent History
 
@@ -60,7 +60,9 @@ Sometimes, a commit has so many things wrong that that it is easier to just undo
 
 	$ git reset HEAD^
 
-This tells git to reset to the previous commit, but to keep the changes introduced by that commit. Looking at the log and status, we can see that our latest commit is gone, but `article.md` is still modified.
+This tells git to reset to the previous commit, but to keep the changes introduced by that commit. `git reset` is powerful and can be destructive if used improperly. It is worth reading more about [`git reset` on git-scm.com](http://git-scm.com/2011/07/11/reset.html).
+
+The log now shows that the latest commit is gone, but `article.md` is still modified.
 
 	$ git log --oneline
 	667f8c9 Add README
@@ -114,11 +116,11 @@ Keeping the revision history tidy may seem superficial, but it helps immensely w
 
 Sometimes it is not clear until a few steps later that you are on the wrong path. Git's flexibility makes it easy to create checkpoints along the way, offering a point to return to if things go wrong.
 
-In my daily development, I commit as often as possible. Anytime I think to myself "ok, that is done, now what?", I commit. While this leads to a revision history that accurately reflects the order of events, it is not the most conducive to effectively managing a large project. So once I am ready to share my changes with my team, I review my unpunished commits and clean them up.
+In my daily development, I commit as often as possible. Anytime I think to myself "ok, that is done, now what?", I commit. While this leads to a revision history that accurately reflects the order of events, it is not the most conducive to effectively managing a large project. So once I am ready to share my changes with my team, I review my unpublished commits and clean them up.
 
-An interactive rebase allows commits to be edited, squashed together or completely removed from from the recent history of a branch.
+An interactive rebase allows commits to be edited, squashed together or completely removed from the recent history of a branch.
 
-While reviewing progress of this article, I discovered a few embarrassing typos. Since the repository had not been shared with anyone yet, I covered my tracks by fixing the typos in the original commit. I preserved my original mistake, so you can follow along by checking out the [typos](https://github.com/bkeepers/git-history/tree/typos) branch of the repository.
+While reviewing my progress on this article, I discovered a few embarrassing typos. Since the repository had not been shared with anyone yet, I covered my tracks by fixing the typos in the original commit. I preserved my original mistake, so you can follow along by checking out the [typos](https://github.com/bkeepers/git-history/tree/typos) branch of the repository.
 
 First, I created two new commits to fix the typos.
 
@@ -183,7 +185,7 @@ The log shows that the typo fixing commits are now gone. The fixes were applied 
 	00165a8 first draft of amend section
 	667f8c9 Add README
 
-This rebase worked without any other interaction, but occasionally a rebase will require manual fixes for merge conflicts. If that happens, don't freak out and simply read the messages. Git will usually help get you out of a bind.
+This rebase worked without any other interaction, but occasionally a rebase will require manual fixes for merge conflicts. If that happens, don't freak out. Simply read the messages. Git will usually help get you out of a bind.
 
 ## Rewrite All of History
 
@@ -195,7 +197,7 @@ My first legitimate use of `git filter-branch` was on large project where the se
 
 	$ git filter-branch --subdirectory-filter client -- --all
 
-Many people use different emails emails for personal and work projects, which can easily result in commits to a repository using the wrong email address. The `--env-filter` can modify basic metadata about a commit, such as author information or the commit date. 
+Many people use different emails for personal and work projects, which can easily result in commits to a repository using the wrong email address. The `--env-filter` can modify basic metadata about a commit, such as author information or the commit date. 
 
 	$ git filter-branch --env-filter '
 	  if [ $GIT_AUTHOR_EMAIL = personal@example.com ];
@@ -204,7 +206,7 @@ Many people use different emails emails for personal and work projects, which ca
 	Rewrite f853027b7979756bab7146d3bb34d8829b81a884 (8/8)
 	Ref 'refs/heads/master' was rewritten
 
-Maybe early on in a project someone committed some extremely large assets, and now everyone that clones the repository has to wait for those assets to download. Or maybe sensitive data found its way into a repository, either on purpose or often by accident.
+Maybe early on in a project someone committed some extremely large assets, and now everyone that clones the repository has to wait for those assets to download. Or maybe you are open-sourcing a project that has some sensitive data stored in it.
 
 	$ git filter-branch --index-filter 'git rm -r --cached --ignore-unmatch docs/designs' \
 	  --prune-empty --tag-name-filter cat -- --all
@@ -214,13 +216,13 @@ All of the following changes will rewrite the full history of a repository, esse
     $ git push
 	 ! [rejected]        master -> master (non-fast-forward)
 
-It is possible to force git to pushing all changes to an existing remote, but note that this could have adverse effects for everyone else working on the project.
+It is possible to force git to push all changes to an existing remote, but remember that this could have adverse effects for everyone else working on the project.
 
     $ git push --force --all --tags
 
 ## Conclusion
 
-Git's powerful features, extreme flexibility and often unintuitive command line may seem overwhelming, but taking time to learn and experiment is a worth-while investment. Understanding how to rewrite the revision history will give you complete control over your projects and make them easier to manage.
+Git's powerful features, extreme flexibility and often unintuitive command line may seem overwhelming, but taking time to learn and experiment is a worth-while investment. Understanding how and when to rewrite the revision history will give you complete control over your projects and make them easier to manage.
 
 ## Author Information
 
