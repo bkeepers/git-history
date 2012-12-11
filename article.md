@@ -12,6 +12,10 @@ Before the excitement of witnessing this rare phenomena becomes overwhelming, he
 
 Hold on as we explore ways to rewrite history with git.
 
+>> This section sounds like github :heart: but it seems like it could be even better.
+>> For example, instead of "Hold on as we explore...", maybe "Join me as we explore..."?
+>> Or "... should generally never ..." could be "... should not ..."
+
 ## Amend Recent History
 
 The safest and likely most common form of rewriting the git history is to amend the latest commit. For whatever reason, the human brain seems wired to remember something important just after pressing the "Send" button on an email, and the right words always come to mind after a conversation is over. Likewise, I often realize I made a mistake immediately after making a commit in git.
@@ -62,6 +66,8 @@ Sometimes, a commit has so many things wrong that that it is easier to just undo
 
 This tells git to reset to the previous commit, but to keep the changes introduced by that commit. Looking at the log and status, we can see that our latest commit is gone, but `article.md` is still modified.
 
+>> Maybe add an abbreviated version of [reset demystified](http://git-scm.com/2011/07/11/reset.html), or at least a reference to it?
+
 	$ git log --oneline
 	667f8c9 Add README
 	
@@ -87,7 +93,13 @@ While this message looks big and scary, it is actually quite helpful. The hints 
 
 Running `git pull` will fetch the remote changes and create a new commit that merges them with our local changes. While there is nothing wrong with the merge commit, it adds unnecessary complexity to the revision history.
 
-[show illustration here]
+	$ git log --decorate --graph --oneline
+	*   6341ecc (HEAD, master) Merge branch 'master' of https://github.com/bkeepers/git-history into master
+	|\
+	| * f82686e (origin/master, origin/HEAD) edits
+	* | d60bf73 Rebase example.
+	|/
+	* 667f8c9 Add README
 
 What would be more ideal would be to take our changes and apply them on top of the remote changes.
 
@@ -97,12 +109,10 @@ What would be more ideal would be to take our changes and apply them on top of t
 
 This makes the revision history appear as if the change was made after a teammate made their commit.
 
-[replace with illustration]
 	$ git log --oneline
-	c408281 update README
-	d136ca4 first draft of reset
-	8dbf5d5 first draft of amend section
-	667f8c9 Add README
+	* 4defdea (HEAD, master) Rebase example.
+	* f82686e (origin/master, origin/HEAD) edits
+	* 667f8c9 Add README
 
 Unless a repository is being pushed to multiple remotes, rebasing when pulling is almost always a good idea. I have git configured to configured to rebase automatically.
 
@@ -114,11 +124,11 @@ Keeping the revision history tidy may seem superficial, but it helps immensely w
 
 Sometimes it is not clear until a few steps later that you are on the wrong path. Git's flexibility makes it easy to create checkpoints along the way, offering a point to return to if things go wrong.
 
-In my daily development, I commit as often as possible. Anytime I think to myself "ok, that is done, now what?", I commit. While this leads to a revision history that accurately reflects the order of events, it is not the most conducive to effectively managing a large project. So once I am ready to share my changes with my team, I review my unpunished commits and clean them up.
+In my daily development, I commit as often as possible. Anytime I think to myself "ok, that is done, now what?", I commit. While this leads to a revision history that accurately reflects the order of events, it is not the most conducive to effectively managing a large project. So once I am ready to share my changes with my team, I review my unpublished commits and clean them up.
 
-An interactive rebase allows commits to be edited, squashed together or completely removed from from the recent history of a branch.
+An interactive rebase allows commits to be edited, squashed together or completely removed from the recent history of a branch.
 
-While reviewing progress of this article, I discovered a few embarrassing typos. Since the repository had not been shared with anyone yet, I covered my tracks by fixing the typos in the original commit. I preserved my original mistake, so you can follow along by checking out the [typos](https://github.com/bkeepers/git-history/tree/typos) branch of the repository.
+While reviewing my progress on this article, I discovered a few embarrassing typos. Since the repository had not been shared with anyone yet, I covered my tracks by fixing the typos in the original commit. I preserved my original mistake, so you can follow along by checking out the [typos](https://github.com/bkeepers/git-history/tree/typos) branch of the repository.
 
 First, I created two new commits to fix the typos.
 
@@ -130,7 +140,7 @@ First, I created two new commits to fix the typos.
 	7bb9109 first draft of amend section
 	667f8c9 Add README
 
-Take note of the commit that needs fixed up. Both the typos were from commit `7bb9109`, first draft of amend section. Start the rebase at the revision before:
+Take note of the commit that needs to be fixed up. Both of the typos were from commit `7bb9109`, "first draft of amend section". Start the rebase at the revision before:
 
 	$ git rebase -i 7bb9109^
 
@@ -183,7 +193,7 @@ The log shows that the typo fixing commits are now gone. The fixes were applied 
 	00165a8 first draft of amend section
 	667f8c9 Add README
 
-This rebase worked without any other interaction, but occasionally a rebase will require manual fixes for merge conflicts. If that happens, don't freak out and simply read the messages. Git will usually help get you out of a bind.
+This rebase worked without any other interaction, but occasionally a rebase will require manual fixes for merge conflicts. If that happens, don't freak out. Simply read the messages. Git will usually help get you out of a bind.
 
 ## Rewrite All of History
 
@@ -195,7 +205,7 @@ My first legitimate use of `git filter-branch` was on large project where the se
 
 	$ git filter-branch --subdirectory-filter client -- --all
 
-Many people use different emails emails for personal and work projects, which can easily result in commits to a repository using the wrong email address. The `--env-filter` can modify basic metadata about a commit, such as author information or the commit date. 
+Many people use different emails for personal and work projects, which can easily result in commits to a repository using the wrong email address. The `--env-filter` can modify basic metadata about a commit, such as author information or the commit date.
 
 	$ git filter-branch --env-filter '
 	  if [ $GIT_AUTHOR_EMAIL = personal@example.com ];
@@ -204,7 +214,7 @@ Many people use different emails emails for personal and work projects, which ca
 	Rewrite f853027b7979756bab7146d3bb34d8829b81a884 (8/8)
 	Ref 'refs/heads/master' was rewritten
 
-Maybe early on in a project someone committed some extremely large assets, and now everyone that clones the repository has to wait for those assets to download. Or maybe sensitive data found its way into a repository, either on purpose or often by accident.
+Maybe early on in a project someone committed some extremely large assets, and now everyone that clones the repository has to wait for those assets to download.  Or you're open-sourcing a project that has some sensitive data (e.g. passwords) stored in it.
 
 	$ git filter-branch --index-filter 'git rm -r --cached --ignore-unmatch docs/designs' \
 	  --prune-empty --tag-name-filter cat -- --all
@@ -214,10 +224,10 @@ All of the following changes will rewrite the full history of a repository, esse
     $ git push
 	 ! [rejected]        master -> master (non-fast-forward)
 
-It is possible to force git to pushing all changes to an existing remote, but note that this could have adverse effects for everyone else working on the project.
+It is possible to force git to push all changes to an existing remote, but remember that this could have adverse effects for everyone else working on the project.
 
     $ git push --force --all --tags
 
 ## Conclusion
 
-Git's powerful features, extreme flexibility and often unintuitive command line may seem overwhelming, but taking time to learn and experiment is a worth-while invistment. Understanding how to rewrite the revision history will give you complete control over your projects and make them easier to manage.
+Git's powerful features, extreme flexibility and often unintuitive command line may seem overwhelming, but taking time to learn and experiment is a worth-while investment. Understanding how and when to rewrite the revision history will give you complete control over your projects and make them easier to manage.
