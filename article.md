@@ -6,15 +6,15 @@ or
 
 ## Introduction
 
-While scientists have crushed the dream of traveling back in time, [Git](http://git-scm.com/) offers control over the fourth dimension when the wrongs of the past need to be corrected. The distributed version control system allows commits to be amended, discarded, reordered and modified to scrub data from a repository.
+While scientists have crushed the dream of traveling back in time, [Git](http://git-scm.com/) offers control over the fourth dimension when the wrongs of the past need to be corrected. The distributed version control system allows commits to be amended, discarded, reordered and modified to scrub the history a repository.
 
-Before the excitement of witnessing this rare phenomena becomes overwhelming, heed the warnings of an experienced time traveler. Git obeys the law of causality—every commit in a git repository is inextricably linked to the commit before it. Changing one commit alters all the commits that come after, creating an alternate reality. Altering the past can be dangerous and–except in rare circumstances–should only be done if the events being altered have not been observed by anyone else. Branches that have already been pushed to a remote should not be altered.
+Before the excitement of participating in this rare phenomena becomes overwhelming, heed the warnings of an experienced time traveler. Git obeys the law of causality—every commit in a git repository is inextricably linked to the commit before it. Changing one commit alters all the commits that come after, creating an alternate reality. Altering the past can be dangerous and–except in rare circumstances–should only be done if the events being altered have not been observed by anyone else. Branches that have already been pushed to a remote should not be altered.
 
 Join me as we explore ways to rewrite history with git.
 
 ## Amend Recent History
 
-The safest and likely most common form of rewriting the git history is to amend the latest commit. For whatever reason, the human brain seems wired to remember something important just after pressing the "Send" button on an email, and the right words always come to mind after a conversation is over. Likewise, I often realize I made a mistake immediately after making a commit in git.
+For whatever reason, the human brain seems wired to remember something important just after pressing the "Send" button on an email, and the right words always come to mind after a conversation is over. Likewise, I often realize I made a mistake immediately after making a commit in git. The safest and most common form of rewriting the git history is to amend the latest commit.
 
 This article was written in a [git repository](https://github.com/bkeepers/git-history). The first commit was to create a README explaining the purpose of the repository.
 
@@ -30,7 +30,7 @@ Oops, after committing, I realized that I had committed `article.md`, which was 
 	$ git rm --cached article.md
 	rm 'article.md'
 
-The `--cached` argument to `git rm` tells git to stage the removal of the file, but to not actually delete the file from the filesystem.
+The `--cached` argument to `git rm` tells git to stage the removal of the file, but to not actually delete the file from the filesystem. If you also want to delete the file, simply leave that argument out.
 
 We can also make other modifications like we would if we were going to create another commit–such as making edits to the README.md and staging them with `git add`. Amend the previous commit by passing the `--amend` flag to `git commit`:
 
@@ -56,17 +56,17 @@ Let's commit this article now that progress has been made.
 
 ## Undo Recent History
 
-Sometimes, a commit has so many things wrong that that it is easier to just undo it. Maybe it was committed to the wrong branch, or a directory of unwanted files got accidentally added.
+Sometimes, a commit has so many mistakes that that it is easier to just undo it. Maybe it was committed to the wrong branch, or a directory of unwanted files got accidentally added.
 
 	$ git reset HEAD^
 
-This tells git to reset to the previous commit, but to keep the changes introduced by that commit. `git reset` is powerful and can be destructive if used improperly. It is worth reading more about [`git reset` on git-scm.com](http://git-scm.com/2011/07/11/reset.html).
+This tells git to remove to the previous commit, but to keep the changes introduced by that commit locally. `git reset` is powerful and can be destructive if used improperly. It is worth reading more about [`git reset` on git-scm.com](http://git-scm.com/2011/07/11/reset.html).
 
 The log now shows that the latest commit is gone, but `article.md` is still modified.
 
 	$ git log --oneline
 	667f8c9 Add README
-	
+
 	$ git status -s
 	M  article.md
 
@@ -89,7 +89,13 @@ While this message looks big and scary, it is actually quite helpful. The hints 
 
 Running `git pull` will fetch the remote changes and create a new commit that merges them with our local changes. While there is nothing wrong with the merge commit, it adds unnecessary complexity to the revision history.
 
-[show illustration here]
+	$ git log --decorate --graph --oneline
+    *   aaf6c0c (HEAD, master) Merge branch 'master' of origin
+    |\
+    | * 9f7e4de Update README
+    * | 00165a8 first draft of amend section
+    |/
+    * 667f8c9 (origin/reset) Add README
 
 What would make our history clearer and more readable would be a way take our changes and apply them on top of the remote changes, like so:
 
@@ -99,12 +105,12 @@ What would make our history clearer and more readable would be a way take our ch
 
 This makes the revision history appear as if the change was made after a teammate made their commit.
 
-[replace with illustration]
-	$ git log --oneline
-	c408281 update README
-	d136ca4 first draft of reset
-	8dbf5d5 first draft of amend section
-	667f8c9 Add README
+	$ git log --decorate --graph --oneline
+	* 8dbf5d5 first draft of amend section
+	* c408281 update README
+	* 667f8c9 Add README
+
+You can see that our git history is now much cleaner and therefor easier to scan.
 
 Unless a repository is being pushed to multiple remotes, rebasing when pulling is almost always a good idea. I have git configured to configured to rebase automatically.
 
@@ -114,7 +120,7 @@ Keeping the revision history tidy may seem superficial, but it helps immensely w
 
 ## Cleanup Recent History
 
-Sometimes it is not clear until a few steps later that you are on the wrong path. Git's flexibility makes it easy to create checkpoints along the way, offering a point to return to if things go wrong.
+Sometimes it is not clear until after a few missteps that there is a better path. Git's flexibility makes it easy to create checkpoints along the way, offering a point to return to if things go wrong.
 
 In my daily development, I commit as often as possible. Anytime I think to myself "ok, that is done, now what?", I commit. While this leads to a revision history that accurately reflects the order of events, the noise of many tiny commits can actually inhibit the maintainability of large projects. So once I am ready to share my changes with my team, I review my unpublished commits and clean them up.
 
@@ -197,7 +203,7 @@ My first legitimate use of `git filter-branch` was on large project where the se
 
 	$ git filter-branch --subdirectory-filter client -- --all
 
-Many people use different email addresses for personal and work projects, which can easily result in commits to a repository using the wrong email address. The `--env-filter` can modify basic metadata about a commit, such as author information or the commit date. 
+Many people use different email addresses for personal and work projects, which can easily result in commits to a repository using the wrong email address. The `--env-filter` can modify basic metadata about a commit, such as author information or the commit date.
 
 	$ git filter-branch --env-filter '
 	  if [ $GIT_AUTHOR_EMAIL = personal@example.com ];
@@ -222,11 +228,11 @@ It is possible to force git to push all changes to an existing remote, but remem
 
 ## Conclusion
 
-Git's powerful features, extreme flexibility and often unintuitive command line may seem overwhelming, but taking time to learn and experiment is a worth-while investment. Understanding how and when to rewrite the revision history will give you complete control over your projects and make them easier to manage.
+Git's powerful features, extreme flexibility and often unintuitive command line may seem overwhelming, but taking time to learn and experiment is a worth-while investment. When in doubt, pass `--help` to any git command to learn more. Understanding how and when to rewrite the revision history will give you complete control over your projects and make them easier to manage.
 
 ## Author Information
 
 Name: Brandon Keepers
 URL: http://twitter.com/bkeepers
 Photo: http://cl.ly/image/3z1w2s383s1C 
-Brandon Keepers is a maker and breaker of things at GitHub working mostly on [Speaker Deck](http://speakerdeck.com). When his face is not dimly lit by a computer screen, you can find him with a book in his hands, playing racquetball or basketball, running with his dog, or enjoying good food and beer with his wife.
+Brandon Keepers is a maker and breaker of things at GitHub working mostly on [Speaker Deck](http://speakerdeck.com). When his face is not dimly lit by a computer screen, you can find him with a book in his hands, playing racquetball or basketball, running with his dog, or enjoying good food and drink with his wife.
