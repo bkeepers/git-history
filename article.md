@@ -233,6 +233,9 @@ Git's powerful features, extreme flexibility and often unintuitive command line 
 ## Author Information
 
 Name: Brandon Keepers
+
 URL: http://twitter.com/bkeepers
+
 Photo: http://cl.ly/image/3z1w2s383s1C 
+
 Brandon Keepers is a maker and breaker of things at GitHub working mostly on [Speaker Deck](http://speakerdeck.com). When his face is not dimly lit by a computer screen, you can find him with a book in his hands, playing racquetball or basketball, running with his dog, or enjoying good food and drink with his wife.
