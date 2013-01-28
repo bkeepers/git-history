@@ -18,7 +18,7 @@ For whatever reason, the human brain seems wired to remember something important
 
 This article was written in a [git repository](https://github.com/bkeepers/git-history). The first commit was to create a README explaining the purpose of the repository.
 
-	$ git add README.md
+	$ git add .
 	$ git commit -am 'Add README'
 	[master (root-commit) 6261ead] Add README
 	 2 files changed, 12 insertions(+)
